@@ -9,7 +9,6 @@ const LocationPage = (props: cityNameProp) => {
   const [weatherData, setWeatherData] = useState<RootObject | undefined>();
   const [newSearch, setNewSearch] = useState(0)
   console.log(weatherData ? weatherData.list : "אין מידע");
-  console.log(localStorage.getItem("cityName"))
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     props.setCityName(event.target.value);
@@ -19,6 +18,7 @@ const LocationPage = (props: cityNameProp) => {
     if (e.key === "Enter") {
       const event: ChangeEvent<HTMLInputElement> = e as unknown as ChangeEvent<HTMLInputElement>;
       handleInputChange(event);
+      localStorage.setItem("cityName",event.target.value)
       setNewSearch(newSearch + 1);
     }
   };
@@ -26,8 +26,8 @@ const LocationPage = (props: cityNameProp) => {
 
   useEffect(() => {
     async function fetchData() {
-      const wr = await getWeatherData();
-      setWeatherData(wr);
+      const weatherinfo = await getWeatherData();
+      setWeatherData(weatherinfo);
     }
 
     fetchData();
@@ -36,7 +36,7 @@ const LocationPage = (props: cityNameProp) => {
   const getWeatherData = async () => {
     try { 
       const url =
-      "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=e58a8b2d3a37b9e6bd3507aa9de5ea2e"
+      "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=e58a8b2d3a37b9e6bd3507aa9de5ea2e"
       const res = await axios.get<RootObject>(url);
       return res.data;
     } catch (err) {
@@ -54,14 +54,16 @@ const LocationPage = (props: cityNameProp) => {
 
   return <div>
     <h1>{ capitalizeFirstWords(cityName) + "'s forecast"}</h1>
-    {weatherData ? weatherData.list[0].weather[0].description : "אין מידע"}
-    <input
+        <input
           className="searchbar"
           type={"text"}
           autoFocus={true}
           placeholder={"Enter city name"}
           onKeyDown={searchLocation}
         />
+        <br/>
+        {weatherData ? weatherData.list[0].dt_txt : "אין מידע"} <br/>
+        {weatherData ? weatherData.list[0].main.temp + '°C' : "אין מידע"}
     </div>;
 };
 
