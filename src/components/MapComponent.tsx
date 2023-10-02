@@ -1,15 +1,12 @@
-import { MapContainer, useMap } from "react-leaflet";
-
-function MapComponent() {
-  const map = useMap();
-  console.log("map center:", map.getCenter());
-  return null;
-}
+import { MapContainer, TileLayer } from "react-leaflet";
 
 function MyMapComponent() {
   return (
-    <MapContainer center={[50.5, 30.5]} zoom={13}>
-      <MapComponent />
+    <MapContainer center={[48.8566, 2.3522]} zoom={13}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
     </MapContainer>
   );
 }

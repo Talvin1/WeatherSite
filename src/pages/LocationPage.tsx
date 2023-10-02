@@ -3,6 +3,8 @@ import axios from "axios";
 import WeatherApi from "../types/WeatherApi";
 import { Link, useParams } from "react-router-dom";
 import cloud_icon from "../images/cloud_icon.png";
+import "./LocationPage.css";
+import MyMapComponent from "../components/MapComponent";
 
 const LocationPage = () => {
   const [weatherData, setWeatherData] = useState<WeatherApi | undefined>(undefined);
@@ -45,7 +47,7 @@ const LocationPage = () => {
       <div className="full_container">
         <div className="top_bar">
           <Link to="/">
-            <img src={cloud_icon} alt="logo" />
+            <img className="cloud_image" src={cloud_icon} alt="logo" />
           </Link>
         </div>
         <div>
@@ -60,7 +62,9 @@ const LocationPage = () => {
             The maximum temperature today in {weatherData?.name} will be: {weatherData?.main.temp_max}
           </p>
         </div>
-        {/* map */}
+        <div className="map_div">
+          <MyMapComponent />
+        </div>
       </div>
     );
   }
