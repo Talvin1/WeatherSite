@@ -1,25 +1,22 @@
 import React, { HTMLInputTypeAttribute, useState } from "react";
-import LocationPage from "./LocationPage";
+import LocationPage from "./pages/LocationPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Homepage from "./components/HomePage";
-import "./App.css";
-
-export const TempType = React.createContext("C");
+import Homepage from "./pages/HomePage";
+import "./pages/App.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const App = () => {
-  const [temp, setTemp] = useState("C");
-  const [cityName, setCityName] = useState("");
-  console.log(cityName)
+  const queryClient = new QueryClient();
 
   return (
-    <TempType.Provider value={temp}>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Homepage cityName={cityName} setCityName={setCityName}/>}></Route>
-          <Route path="/location" element={<LocationPage cityName={cityName} setCityName={setCityName}/>}></Route>
+          <Route path="/" element={<Homepage />}></Route>
+          <Route path={"/location/:cityName"} element={<LocationPage />} />
         </Routes>
       </BrowserRouter>
-    </TempType.Provider>
+    </QueryClientProvider>
   );
 };
 

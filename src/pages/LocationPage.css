@@ -1,0 +1,25 @@
+.top_bar {
+  margin: 0;
+  padding: 0;
+}
+
+.cloud_image {
+  height: 10vh;
+  width: auto;
+}
+
+.leaflet-container {
+  height: 50vh;
+}
+
+.map_div {
+  width: 30vw;
+}
+
+.full_container {
+  align-content: space-between;
+  display: flex;
+  gap: 3vh;
+  flex-direction: column;
+  align-items: center;
+}
