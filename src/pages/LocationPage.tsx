@@ -6,6 +6,9 @@ import "./LocationPage.css";
 import MyMapComponent from "../components/MapComponent";
 import { convertNameToCoord } from "../dataOperations";
 import { getWeatherData } from "../dataOperations";
+import "leaflet/dist/leaflet.css";
+import "maplibre-gl/dist/maplibre-gl.css";
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />;
 
 const LocationPage = () => {
   const [weatherData, setWeatherData] = useState<WeatherApi | undefined>(undefined);
@@ -19,13 +22,16 @@ const LocationPage = () => {
 
   const fetchData = async () => {
     try {
+      let newCoordData: [number, number] = coord;
       const coordData = await convertNameToCoord(cityName || "");
-      setCoord((coordinates) => [coordData?.lat || 0, coordData?.lon || 0]);
+      newCoordData[0] = coordData?.lat || 0;
+      newCoordData[1] = coordData?.lon || 0;
+      setCoord(newCoordData);
       const weatherResponse = await getWeatherData(cityName || "");
       setWeatherData(weatherResponse);
       setLoading(false);
     } catch (error) {
-      window.alert("Error accured, Please try again");
+      window.alert("Error occurred. Please try again");
     }
   };
 
@@ -52,7 +58,7 @@ const LocationPage = () => {
           </p>
         </div>
         <div className="map_div">
-          <MyMapComponent lat={coord?.[0] || 0} lon={coord?.[1] || 0} />
+          {coord[0] !== 0 && coord[1] !== 0 ? <MyMapComponent lat={coord[0]} lon={coord[1]} /> : <p>Loading map...</p>}
         </div>
       </div>
     );

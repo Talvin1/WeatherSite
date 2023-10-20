@@ -1,6 +1,8 @@
 .top_bar {
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .cloud_image {
@@ -17,9 +19,9 @@
 }
 
 .full_container {
+  text-align: center;
   align-content: space-between;
   display: flex;
-  gap: 3vh;
   flex-direction: column;
   align-items: center;
 }

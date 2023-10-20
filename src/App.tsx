@@ -1,4 +1,3 @@
-import React, { HTMLInputTypeAttribute, useState } from "react";
 import LocationPage from "./pages/LocationPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/HomePage";

@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form";
 import "../images/search.png";
 import { Link } from "react-router-dom";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { MapContainer, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { getWeatherData } from "../dataOperations";
 
 type TempType = "metric" | "kelvin" | "imperial";
 type SearchData = { tempType: TempType; cityName: string };
@@ -20,47 +18,44 @@ const Homepage = () => {
     },
   });
 
-  const [coord, setCoord] = useState();
   const localStorageSearchHistory = localStorage.getItem("searchHistory") ?? "[]";
   const searchHistory = JSON.parse(localStorageSearchHistory);
-
   const cityName = localStorage.getItem("cityName");
 
   if (!cityName) {
     navigate("/");
   }
 
-  const searchLocation = (data: SearchData) => {
+  const searchLocation = async (data: SearchData) => {
     if (data.cityName) {
+      searchHistory.unshift(data.cityName);
+      if (searchHistory.length > 5) {
+        searchHistory.pop();
+      }
+      localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
       localStorage.setItem("cityName", data.cityName);
-      const updatedSearchHistory = new Set([...searchHistory, data.cityName]);
-      localStorage.setItem("searchHistory", JSON.stringify([...updatedSearchHistory]));
       localStorage.setItem("tempType", data.tempType);
-      navigate("/location/" + data.cityName);
+      console.log(getWeatherData(data.cityName));
+
+      if ((await getWeatherData(data.cityName)) != null) {
+        navigate("/location/" + data.cityName);
+      } else {
+      }
     }
   };
 
-  const Header = () => {
+  const Main = () => {
     return (
       <div className="header_div">
-        <h1>MEZEG</h1>
-        <form onSubmit={handleSubmit(searchLocation)}>
-          <label>
-            Temperature:
-            <select {...register("tempType")}>
-              <option value="metric">C°</option>
-              <option value="imperial">°F</option>
-              <option value="kelvin">°K</option>
-            </select>
-          </label>
+        <form className="form" onSubmit={handleSubmit(searchLocation)}>
           <input
             {...register("cityName")}
             className="searchbar"
             type={"text"}
             autoFocus={true}
-            placeholder={"Enter city name"}
+            placeholder={"Enter place name"}
           />
-          <input type="submit" />
+          <input className="search_btn" type="submit" value="Search" />
         </form>
       </div>
     );
@@ -68,11 +63,16 @@ const Homepage = () => {
 
   const RecentSearches = () => {
     return (
-      <div className="recent_searches_div">
+      <div className="recent_search_div">
         <ul>
+          <h4>Recently Searched:</h4>
           {searchHistory.map((search: string) => (
             <li>
-              <Link to={"/location/" + search}>{search[0].toUpperCase() + search.slice(1)}</Link>
+              <Link to={"/location/" + search}>
+                {(search[0].toUpperCase() + search.slice(1)).length > 11
+                  ? (search[0].toUpperCase() + search.slice(1)).substring(0, 11)
+                  : search[0].toUpperCase() + search.slice(1)}
+              </Link>
             </li>
           ))}
         </ul>
@@ -80,9 +80,24 @@ const Homepage = () => {
     );
   };
   return (
-    <div>
-      <Header />
-      <RecentSearches />
+    <div className="page_div">
+      <div className="top_bar">
+        <label className="form_label">
+          Temperature Unit:
+          <select {...register("tempType")} className="temp_select">
+            <option value="metric">C°</option>
+            <option value="imperial">°F</option>
+            <option value="kelvin">°K</option>
+          </select>
+        </label>
+        <h1 className="title">MEZEG</h1>
+      </div>
+      <div className="header_div">
+        <Main />
+        <div className="recent_search_div">
+          <RecentSearches />
+        </div>
+      </div>
     </div>
   );
 };
