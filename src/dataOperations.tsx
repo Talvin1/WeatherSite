@@ -2,11 +2,24 @@ import axios from "axios";
 import WeatherApi from "./types/WeatherApi";
 import CoordApi from "./types/CoordApi";
 
-const getWeatherData = async (PlaceName: string) => {
+const getWeatherDataName = async (PlaceName: string) => {
   const tempType = localStorage.getItem("tempType") ?? "metric";
   try {
     const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${PlaceName}&appid=${weatherApiKey}&units=${tempType}`;
+    let res = await axios.get<WeatherApi>(url);
+    return res.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+const getWeatherDataCoord = async (lat: number, lon: number) => {
+  const tempType = localStorage.getItem("tempType") ?? "metric";
+  try {
+    const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
+    let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=${tempType}`;
     let res = await axios.get<WeatherApi>(url);
     return res.data;
   } catch (err) {
@@ -41,4 +54,4 @@ const convertNameToCoord = async (cityName: string) => {
   }
 };
 
-export { convertNameToCoord, getWeatherData };
+export { convertNameToCoord, getWeatherDataCoord, getWeatherDataName };

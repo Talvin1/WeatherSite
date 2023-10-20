@@ -5,7 +5,7 @@ import cloud_icon from "../images/cloud_icon.png";
 import "./LocationPage.css";
 import MyMapComponent from "../components/MapComponent";
 import { convertNameToCoord } from "../dataOperations";
-import { getWeatherData } from "../dataOperations";
+import { getWeatherDataName } from "../dataOperations";
 import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />;
@@ -27,11 +27,11 @@ const LocationPage = () => {
       newCoordData[0] = coordData?.lat || 0;
       newCoordData[1] = coordData?.lon || 0;
       setCoord(newCoordData);
-      const weatherResponse = await getWeatherData(cityName || "");
+      const weatherResponse = await getWeatherDataName(cityName || "");
       setWeatherData(weatherResponse);
       setLoading(false);
     } catch (error) {
-      window.alert("Error occurred. Please try again");
+      window.alert("Error occurred, Please try again");
     }
   };
 

@@ -1,15 +1,24 @@
 html {
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 1vh;
+  padding: 0;
 }
 
 #root {
-  height: 98vh;
+  margin: 0;
+  height: 100vh;
   width: 99vw;
   font-family: sans-serif;
   color: #333;
   background-color: #f3e4d7;
   display: flex;
   flex-direction: column;
+  align-items: center;
   border-radius: 3vh;
 }
 
@@ -34,6 +43,18 @@ html {
 
 .form_label {
   color: #333;
+}
+
+.temp_select {
+  border: 0;
+  border-radius: 0.8vh;
+  margin-left: 1vh;
+}
+
+.temp_select li {
+  border: 0;
+  border-radius: 1vh;
+  background-color: aquamarine;
 }
 
 .title {
@@ -114,4 +135,8 @@ html {
 .recent_search_div h4 {
   color: #646161;
   margin: 1vh;
+}
+
+.swal_popup {
+  color: #333;
 }
