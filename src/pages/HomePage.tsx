@@ -3,7 +3,7 @@ import "./HomePage.css";
 import { useForm } from "react-hook-form";
 import "../images/search.png";
 import { Link } from "react-router-dom";
-import { getWeatherDataName, getWeatherDataCoord } from "../dataOperations";
+import { getWeatherDataName, getCurrentLocation } from "../dataOperations";
 import Swal from "sweetalert2";
 
 type TempType = "metric" | "kelvin" | "imperial";
@@ -11,12 +11,14 @@ type SearchData = { tempType: TempType; cityName: string };
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SearchData>({
+  const { register, handleSubmit, watch } = useForm<SearchData>({
     defaultValues: {
       tempType: "metric",
       cityName: "",
     },
   });
+
+  const tempType = watch("tempType");
 
   const localStorageSearchHistory = localStorage.getItem("searchHistory") ?? "[]";
   const searchHistory = JSON.parse(localStorageSearchHistory);
@@ -28,11 +30,13 @@ const Homepage = () => {
 
   const searchLocation = async (data: SearchData) => {
     try {
-      console.log(await getWeatherDataName(data.cityName));
+      await getWeatherDataName(data.cityName);
       if (data.cityName) {
-        searchHistory.unshift(data.cityName);
-        if (searchHistory.length > 5) {
-          searchHistory.pop();
+        if (!searchHistory.includes(data.cityName)) {
+          searchHistory.unshift(data.cityName);
+          if (searchHistory.length > 5) {
+            searchHistory.pop();
+          }
         }
       }
       localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
@@ -52,29 +56,33 @@ const Homepage = () => {
     }
   };
 
-  // const searchCurrentLocation = async (lat: number, lon: number) => {
-  //   try {
-  //     const data = await getWeatherDataCoord(lat, lon);
-  //     searchHistory.unshift(data.name);
-  //     if (searchHistory.length > 5) {
-  //       searchHistory.pop();
-  //     }
-  //     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-  //     localStorage.setItem("cityName", data.name);
-  //     localStorage.setItem("tempType", tempType);
-  //     navigate("/location/" + data.cityName);
-  //   } catch (error) {
-  //     Swal.fire({
-  //       title: data.cityName + " was not found!",
-  //       text: "Please Try Again",
-  //       icon: "error",
-  //       confirmButtonText: "Ok",
-  //       timer: 5000,
-  //       confirmButtonColor: "#b5b0ab",
-  //       customClass: "swal_popup",
-  //     });
-  //   }
-  // };
+  const searchMyLocation = async () => {
+    try {
+      const data = await getCurrentLocation();
+      if (data.cod === "200") {
+        if (!searchHistory.includes(data.city.name)) {
+          searchHistory.unshift(data.city.name);
+          if (searchHistory.length > 5) {
+            searchHistory.pop();
+          }
+        }
+      }
+      localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+      localStorage.setItem("cityName", data.city.name);
+      localStorage.setItem("tempType", tempType);
+      navigate("/location/" + data.city.name);
+    } catch (error) {
+      Swal.fire({
+        title: "Your current location was not found!",
+        text: "Please Try Again",
+        icon: "error",
+        confirmButtonText: "Ok",
+        timer: 5000,
+        confirmButtonColor: "#b5b0ab",
+        customClass: "swal_popup",
+      });
+    }
+  };
 
   const TempForm = () => {
     return (
@@ -101,9 +109,12 @@ const Homepage = () => {
             placeholder={"Enter place name"}
           />
           <input className="search_btn" type="submit" value="Search" />
-          {/* <button className="search_btn" onSubmit={searchCurrentLocation}> */}
-          {/* My location
-          </button> */}
+          <input
+            className="search_btn"
+            type="button"
+            onClick={() => searchMyLocation()}
+            value="Search my location"
+          />{" "}
         </form>
       </div>
     );
