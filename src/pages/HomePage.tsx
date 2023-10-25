@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import "./HomePage.css";
+import "./HomePage.scss";
 import { useForm } from "react-hook-form";
 import "../images/search.png";
 import { Link } from "react-router-dom";
@@ -38,21 +38,33 @@ const Homepage = () => {
             searchHistory.pop();
           }
         }
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+        localStorage.setItem("cityName", data.cityName);
+        localStorage.setItem("tempType", data.tempType);
+        navigate("/location/" + data.cityName);
       }
-      localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-      localStorage.setItem("cityName", data.cityName);
-      localStorage.setItem("tempType", data.tempType);
-      navigate("/location/" + data.cityName);
     } catch (error) {
-      Swal.fire({
-        title: data.cityName + " was not found!",
-        text: "Please Try Again",
-        icon: "error",
-        confirmButtonText: "Ok",
-        timer: 5000,
-        confirmButtonColor: "#b5b0ab",
-        customClass: "swal_popup",
-      });
+      if (data.cityName === "") {
+        Swal.fire({
+          title: "No input was entered...",
+          text: "Please enter a place",
+          icon: "error",
+          confirmButtonText: "Ok",
+          timer: 5000,
+          confirmButtonColor: "#b5b0ab",
+          customClass: "swal_popup",
+        });
+      } else {
+        Swal.fire({
+          title: data.cityName + " was not found!",
+          text: "Please Try Again",
+          icon: "error",
+          confirmButtonText: "Ok",
+          timer: 5000,
+          confirmButtonColor: "#b5b0ab",
+          customClass: "swal_popup",
+        });
+      }
     }
   };
 
@@ -89,9 +101,15 @@ const Homepage = () => {
       <label className="form_label">
         Temperature Unit:
         <select {...register("tempType")} className="temp_select">
-          <option value="metric">°C</option>
-          <option value="imperial">°F</option>
-          <option value="kelvin">°K</option>
+          <option className="tempOption" value="metric">
+            °C
+          </option>
+          <option className="tempOption" value="imperial">
+            °F
+          </option>
+          <option className="tempOption" value="kelvin">
+            °K
+          </option>
         </select>
       </label>
     );

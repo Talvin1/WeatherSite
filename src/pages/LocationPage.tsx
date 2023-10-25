@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import WeatherApi from "../types/WeatherApi";
 import { Link, useParams } from "react-router-dom";
 import cloud_icon from "../images/cloud_icon.png";
-import "./LocationPage.css";
+import "./LocationPage.scss";
 import MyMapComponent from "../components/MapComponent";
 import { convertNameToCoord } from "../dataOperations";
 import { getWeatherDataName } from "../dataOperations";
 import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
+import sunIcon from "../images/sun.png";
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />;
 
 const LocationPage = () => {
@@ -48,11 +49,14 @@ const LocationPage = () => {
         <div>
           {weatherData ? <h1>{weatherData.name}</h1> : <div>Error, cannot fetch data</div>}
           <p>
-            Current temperature in {weatherData?.name} is: {weatherData?.main.temp} degrees
+            Temperature in {weatherData?.name} is: {weatherData?.main.temp} degrees{" "}
+            {/* {weatherData?.main.temp && weatherData.main.temp > 21 ? (
+              <img className="sun_icon" src={sunIcon} alt="logo" />
+            ) : (
+              <img className="sun_icon" src={cloud_icon} alt="logo" /> */}
+            {/* )} */}
           </p>
-          <p>
-            Feels like: {weatherData?.main.feels_like}, in {weatherData?.name} at the moment
-          </p>
+          <p>Feels like: {weatherData?.main.feels_like}</p>
           <p>
             The maximum temperature today in {weatherData?.name} will be: {weatherData?.main.temp_max}
           </p>
