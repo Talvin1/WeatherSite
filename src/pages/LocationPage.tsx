@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import WeatherApi from "../types/WeatherApi";
 import { Link, useParams } from "react-router-dom";
 import cloud_icon from "../images/cloud_icon.png";
-import "./LocationPage.scss";
+import "../SCSS/LocationPage.scss";
 import MyMapComponent from "../components/MapComponent";
 import { convertNameToCoord } from "../dataOperations";
 import { getWeatherDataName } from "../dataOperations";

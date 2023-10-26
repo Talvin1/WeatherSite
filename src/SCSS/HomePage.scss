@@ -3,9 +3,9 @@ $color_2: black;
 $color_3: #646161;
 $font-family_1: sans-serif;
 $background-color_1: #f3e4d7;
-$background-color_2: aquamarine;
 $background-color_3: rgb(230, 219, 205);
 $background-color_4: #e2dad3;
+$background-color_5: #eee9e4;
 
 html {
   overflow: hidden;
@@ -15,10 +15,11 @@ html {
 body {
   margin: 1vh;
   padding: 0;
+  background-color: $background-color_5;
 }
 #root {
   margin: 0;
-  height: 100vh;
+  height: fit-content;
   width: 99vw;
   font-family: $font-family_1;
   color: $color_1;
@@ -28,6 +29,12 @@ body {
   align-items: center;
   border-radius: 3vh;
 }
+
+.search_btn,
+select {
+  cursor: pointer;
+}
+
 .page_div {
   height: 96vh;
   width: 96vw;
@@ -46,18 +53,25 @@ body {
   border: 0;
   border-radius: 0.8vh;
   margin-left: 1vh;
+  box-shadow: 0.09vh 0.04vw;
   li {
     border: 0;
     border-radius: 1vh;
-    background-color: $background-color_2;
+    background-color: $background-color_1;
   }
 }
 .form_label {
   color: $color_1;
+  cursor: default;
+  user-select: none;
 }
+
 .title {
   margin-left: 33vw;
+  cursor: default;
+  user-select: none;
 }
+
 .header_div {
   display: flex;
   justify-content: center;
@@ -70,6 +84,7 @@ body {
   border-radius: 3vh;
 }
 .recent_search_div {
+  box-shadow: 0.09vh 0.04vw;
   height: 27vh;
   width: 20vw;
   margin-bottom: 3vh;
@@ -104,6 +119,8 @@ body {
   h4 {
     color: $color_3;
     margin: 1vh;
+    cursor: default;
+    user-select: none;
   }
 }
 .search_btn {
@@ -114,9 +131,9 @@ body {
   font-weight: bold;
   font-size: 1.7vh;
   margin-left: 1vw;
-  box-shadow: 0.09vh 0.1vw;
+  box-shadow: 0.09vh 0.04vw;
   &:hover {
-    opacity: 80%;
+    opacity: 95%;
     transition: 0.3s;
   }
 }
@@ -124,14 +141,15 @@ body {
   height: 3.4vh;
   border-radius: 1vh;
   border: 0vh solid #cbb8b8;
+  box-shadow: 0.09vh 0.04vw;
   &::placeholder {
     text-align: center;
-    opacity: 50%;
+    opacity: 90%;
     font-size: 2vh;
   }
   &:hover {
     opacity: 80%;
-    transition: 0.3s;
+    transition: 0.2s;
   }
 }
 .tempOption {
