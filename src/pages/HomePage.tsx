@@ -4,6 +4,7 @@ import "../images/search.png";
 import CenterHomepage from "../components/CenterHomepage";
 import RecentSearches from "../components/RecentSearches";
 import TempType from "../types/TempType";
+import TempForm from "../components/TempForm";
 type SearchData = { tempType: TempType; cityName: string };
 
 interface HomepageProps {
@@ -22,35 +23,10 @@ const Homepage: React.FC<HomepageProps> = ({ tempType, setTempType }) => {
   const localStorageSearchHistory = localStorage.getItem("searchHistory") ?? "[]";
   const searchHistory = JSON.parse(localStorageSearchHistory);
 
-  const TempForm = () => {
-    const handleTempTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedTempType = e.target.value as TempType;
-      setTempType(selectedTempType);
-      setValue("tempType", selectedTempType); // Update the form value
-    };
-
-    return (
-      <label className="form_label">
-        Temperature Unit:
-        <select {...register("tempType")} value={tempType} onChange={handleTempTypeChange} className="temp_select">
-          <option className="tempOption" value="metric">
-            °C
-          </option>
-          <option className="tempOption" value="imperial">
-            °F
-          </option>
-          <option className="tempOption" value="kelvin">
-            °K
-          </option>
-        </select>
-      </label>
-    );
-  };
-
   return (
     <div className="page_div">
       <div className="top_bar">
-        <TempForm />
+        <TempForm setValue={setValue} register={register} tempType={watch("tempType")} setTempType={setTempType} />
         <h1 className="title">MEZEG</h1>
       </div>
       <div className="header_div">

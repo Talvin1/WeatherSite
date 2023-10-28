@@ -12,6 +12,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.22",
     "@uidotdev/usehooks": "^2.4.1",
+    "antd": "^5.10.2",
     "axios": "^1.4.0",
     "framer-motion": "^10.16.4",
     "fuse.js": "^6.6.2",

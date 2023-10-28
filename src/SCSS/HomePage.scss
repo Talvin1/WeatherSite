@@ -2,10 +2,12 @@ $color_1: #333;
 $color_2: black;
 $color_3: #646161;
 $font-family_1: sans-serif;
-$background-color_1: #f3e4d7;
-$background-color_3: rgb(230, 219, 205);
+// $background-color_1: #f3e4d7;
+$background-color_1: #f6f4f2;
+// $background-color_3: rgb(230, 219, 205);
+$background-color_3: rgb(228, 217, 204);
+// $background-color_4: #e2dad3;
 $background-color_4: #e2dad3;
-$background-color_5: #eee9e4;
 
 html {
   overflow: hidden;
@@ -15,7 +17,6 @@ html {
 body {
   margin: 1vh;
   padding: 0;
-  background-color: $background-color_5;
 }
 #root {
   margin: 0;
@@ -124,7 +125,8 @@ select {
   }
 }
 .search_btn {
-  height: 3.5vh;
+  height: 4vh;
+  width: fit-content;
   border-radius: 1vh;
   border: 0vh solid #cbb8b8;
   color: $color_2;
@@ -138,7 +140,8 @@ select {
   }
 }
 .searchbar {
-  height: 3.4vh;
+  width: 13vw;
+  height: 4vh;
   border-radius: 1vh;
   border: 0vh solid #cbb8b8;
   box-shadow: 0.09vh 0.04vw;

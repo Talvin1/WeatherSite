@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import TempType from "../types/TempType";
+import { Input } from "antd";
 
 type SearchData = { tempType: TempType; cityName: string };
 
@@ -34,7 +35,6 @@ const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType }) => {
           }
         }
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-        // localStorage.setItem("cityName", data.cityName);
         navigate("/location/" + data.cityName);
       }
     } catch (error) {
@@ -92,18 +92,16 @@ const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType }) => {
   return (
     <div className="header_div">
       <form className="form" onSubmit={handleSubmit(searchLocation)}>
-        <input
+        <Input
           {...register("cityName")}
           className="searchbar"
           type="text"
           autoFocus={true}
           placeholder={"Enter place name"}
         />
-        <motion.input className="search_btn" whileHover={{ scale: 1.03 }} type="submit" value="Search" />
-        <motion.input
+        <Input className="search_btn" type="submit" value="Search" />
+        <Input
           className="search_btn"
-          whileTap={{ scale: 0.8 }}
-          whileHover={{ scale: 1.03 }}
           type="button"
           onClick={() => searchMyLocation()}
           value="Search my location"

@@ -46,6 +46,7 @@ const LocationPage: React.FC<LocationPageProps> = ({ tempType }) => {
   } else {
     return (
       <div className="full_container">
+        {/* <TempForm register={} setValue={} tempType={} setTempType={}></TempForm> */}
         <div className="top_bar">
           <Link to="/">
             <img className="cloud_image" src={cloud_icon} alt="logo" />
@@ -55,11 +56,6 @@ const LocationPage: React.FC<LocationPageProps> = ({ tempType }) => {
           {weatherData ? <h1>{weatherData.name}</h1> : <div>Error, cannot fetch data</div>}
           <p>
             Temperature in {weatherData?.name} is: {weatherData?.main.temp} degrees{" "}
-            {/* {weatherData?.main.temp && weatherData.main.temp > 21 ? (
-              <img className="sun_icon" src={sunIcon} alt="logo" />
-            ) : (
-              <img className="sun_icon" src={cloud_icon} alt="logo" /> */}
-            {/* )} */}
           </p>
           <p>Feels like: {weatherData?.main.feels_like}</p>
           <p>
