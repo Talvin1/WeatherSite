@@ -9,9 +9,14 @@ import { getWeatherDataName } from "../dataOperations";
 import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import sunIcon from "../images/sun.png";
+import TempType from "../types/TempType";
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />;
 
-const LocationPage = () => {
+export interface LocationPageProps {
+  tempType: TempType;
+}
+
+const LocationPage: React.FC<LocationPageProps> = ({ tempType }) => {
   const [weatherData, setWeatherData] = useState<WeatherApi | undefined>(undefined);
   const [coord, setCoord] = useState<[number, number]>([0, 0]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -28,7 +33,7 @@ const LocationPage = () => {
       newCoordData[0] = coordData?.lat || 0;
       newCoordData[1] = coordData?.lon || 0;
       setCoord(newCoordData);
-      const weatherResponse = await getWeatherDataName(cityName || "");
+      const weatherResponse = await getWeatherDataName(cityName || "", tempType);
       setWeatherData(weatherResponse);
       setLoading(false);
     } catch (error) {

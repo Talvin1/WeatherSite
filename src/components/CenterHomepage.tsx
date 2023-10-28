@@ -4,26 +4,28 @@ import { getCurrentLocation, getWeatherDataName } from "../dataOperations";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import TempType from "../types/TempType";
 
-type TempType = "metric" | "kelvin" | "imperial";
 type SearchData = { tempType: TempType; cityName: string };
-type CenterHomepageProps = {
-  tempType: TempType;
-};
 
-const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType: tempTypeProp }) => {
+export interface CenterHomepageProps {
+  tempType: TempType;
+}
+
+const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType }) => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SearchData>({
     defaultValues: {
-      tempType: tempTypeProp,
+      tempType: tempType,
       cityName: "",
     },
   });
   const localStorageSearchHistory = localStorage.getItem("searchHistory") ?? "[]";
   const searchHistory = JSON.parse(localStorageSearchHistory);
+
   const searchLocation = async (data: SearchData) => {
     try {
-      await getWeatherDataName(data.cityName);
+      await getWeatherDataName(data.cityName, tempType);
       if (data.cityName) {
         if (!searchHistory.includes(data.cityName)) {
           searchHistory.unshift(data.cityName);
@@ -32,8 +34,7 @@ const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType: tempTypeProp 
           }
         }
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-        localStorage.setItem("cityName", data.cityName);
-        localStorage.setItem("tempType", tempTypeProp);
+        // localStorage.setItem("cityName", data.cityName);
         navigate("/location/" + data.cityName);
       }
     } catch (error) {
@@ -63,7 +64,7 @@ const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType: tempTypeProp 
 
   const searchMyLocation = async () => {
     try {
-      const data = await getCurrentLocation();
+      const data = await getCurrentLocation(tempType);
       if (data.cod === "200") {
         if (!searchHistory.includes(data.city.name)) {
           searchHistory.unshift(data.city.name);
@@ -74,7 +75,6 @@ const CenterHomepage: React.FC<CenterHomepageProps> = ({ tempType: tempTypeProp 
       }
       localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
       localStorage.setItem("cityName", data.city.name);
-      localStorage.setItem("tempType", tempTypeProp);
       navigate("/location/" + data.city.name);
     } catch (error) {
       Swal.fire({
