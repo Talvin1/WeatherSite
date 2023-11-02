@@ -1,14 +1,29 @@
 import axios from "axios";
-// import React from "react";
 import WeatherApi from "./types/WeatherApi";
+import WeatherCoordApi from "./types/WeatherCoordApi";
 import CoordApi from "./types/CoordApi";
+import LocationApi from "./types/LocationApi";
+import TempType from "./types/TempType";
 
-const getWeatherData = async (PlaceName: string) => {
-  const tempType = localStorage.getItem("tempType") ?? "metric";
+const getWeatherDataName = async (PlaceName: string, tempType: TempType) => {
   try {
     const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${PlaceName}&appid=${weatherApiKey}&units=${tempType}`;
     let res = await axios.get<WeatherApi>(url);
+    return res.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+const getWeatherDataCoord = async (lat: number, lon: number, tempType: TempType) => {
+  // const tempType =
+  try {
+    const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
+    let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=${tempType}`;
+    let res = await axios.get<WeatherCoordApi>(url);
+    console.log(res.data);
     return res.data;
   } catch (err) {
     console.error("Error:", err);
@@ -42,4 +57,20 @@ const convertNameToCoord = async (cityName: string) => {
   }
 };
 
-export { convertNameToCoord, getWeatherData };
+const getCurrentLocation = async (tempType: TempType) => {
+  let lat: number = 0;
+  let lon: number = 0;
+  try {
+    const locationApi = process.env.REACT_APP_LOCATION_API_KEY;
+    let url = `https://api.geoapify.com/v1/ipinfo?apiKey=${locationApi}`;
+    const locationResponse = await axios.get<LocationApi>(url);
+    lat = locationResponse.data.location.latitude;
+    lon = locationResponse.data.location.longitude;
+    return getWeatherDataCoord(lat, lon, tempType);
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export { convertNameToCoord, getWeatherDataCoord, getWeatherDataName, getCurrentLocation };

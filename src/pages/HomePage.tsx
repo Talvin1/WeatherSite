@@ -1,88 +1,40 @@
-import { useNavigate } from "react-router";
-import "./HomePage.css";
+import "../SCSS/HomePage.scss";
 import { useForm } from "react-hook-form";
 import "../images/search.png";
-import { Link } from "react-router-dom";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { MapContainer, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { useState } from "react";
-
-type TempType = "metric" | "kelvin" | "imperial";
+import CenterHomepage from "../components/CenterHomepage";
+import RecentSearches from "../components/RecentSearches";
+import TempType from "../types/TempType";
+import TempForm from "../components/TempForm";
 type SearchData = { tempType: TempType; cityName: string };
 
-const Homepage = () => {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SearchData>({
+interface HomepageProps {
+  tempType: TempType;
+  setTempType: (tempType: TempType) => void;
+}
+
+const Homepage: React.FC<HomepageProps> = ({ tempType, setTempType }) => {
+  const { register, watch, setValue } = useForm<SearchData>({
     defaultValues: {
-      tempType: "metric",
+      tempType: tempType,
       cityName: "",
     },
   });
 
-  const [coord, setCoord] = useState();
   const localStorageSearchHistory = localStorage.getItem("searchHistory") ?? "[]";
   const searchHistory = JSON.parse(localStorageSearchHistory);
 
-  const cityName = localStorage.getItem("cityName");
-
-  if (!cityName) {
-    navigate("/");
-  }
-
-  const searchLocation = (data: SearchData) => {
-    if (data.cityName) {
-      localStorage.setItem("cityName", data.cityName);
-      const updatedSearchHistory = new Set([...searchHistory, data.cityName]);
-      localStorage.setItem("searchHistory", JSON.stringify([...updatedSearchHistory]));
-      localStorage.setItem("tempType", data.tempType);
-      navigate("/location/" + data.cityName);
-    }
-  };
-
-  const Header = () => {
-    return (
-      <div className="header_div">
-        <h1>MEZEG</h1>
-        <form onSubmit={handleSubmit(searchLocation)}>
-          <label>
-            Temperature:
-            <select {...register("tempType")}>
-              <option value="metric">C°</option>
-              <option value="imperial">°F</option>
-              <option value="kelvin">°K</option>
-            </select>
-          </label>
-          <input
-            {...register("cityName")}
-            className="searchbar"
-            type={"text"}
-            autoFocus={true}
-            placeholder={"Enter city name"}
-          />
-          <input type="submit" />
-        </form>
-      </div>
-    );
-  };
-
-  const RecentSearches = () => {
-    return (
-      <div className="recent_searches_div">
-        <ul>
-          {searchHistory.map((search: string) => (
-            <li>
-              <Link to={"/location/" + search}>{search[0].toUpperCase() + search.slice(1)}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
   return (
-    <div>
-      <Header />
-      <RecentSearches />
+    <div className="page_div">
+      <div className="top_bar">
+        <TempForm setValue={setValue} register={register} tempType={watch("tempType")} setTempType={setTempType} />
+        <h1 className="title">MEZEG</h1>
+      </div>
+      <div className="header_div">
+        <CenterHomepage tempType={watch("tempType")} />
+        <div className="recent_search_div">
+          <RecentSearches searchHistory={searchHistory} />
+        </div>
+      </div>
     </div>
   );
 };

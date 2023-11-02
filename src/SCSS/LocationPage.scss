@@ -1,25 +1,37 @@
 .top_bar {
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+body {
+  height: 100vh;
+}
+
+#root {
+  height: 99vh;
 }
 
 .cloud_image {
   height: 10vh;
   width: auto;
 }
-
 .leaflet-container {
   height: 50vh;
+  border-radius: 2vh;
 }
-
 .map_div {
   width: 30vw;
 }
-
 .full_container {
+  text-align: center;
   align-content: space-between;
   display: flex;
-  gap: 3vh;
   flex-direction: column;
   align-items: center;
+}
+
+#root {
+  height: 98vh !important;
 }
